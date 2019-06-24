@@ -14,6 +14,7 @@ Someone suggested that my [`minesweeper`](https://github.com/LeptoSpira/mineswee
 
 ## Setup
 ### Dependencies
+- `discord.py`
 - `numpy`
 
 ### Installation
