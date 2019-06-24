@@ -21,6 +21,17 @@ pip(version) install -r requirements.txt
 python(version) minebot.py
 ```
 
+## Usage
+1. Create an application and discord bot at https://discordapp.com/developers/applications/
+1. Create a `config.json` file with:
+
+    ```
+    {
+      "token": "your-discord-bot-token",
+    }
+    ```
+
+
 ## Footnote
 LeptoSpira - Discord: `@LeptoSpira#4548`
 
