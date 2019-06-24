@@ -9,15 +9,6 @@ import discord
 class Client(discord.Client):
     async def on_ready(self):
 
-        self.bot_emojis = {
-            "no":
-            discord.utils.get(self.get_guild(406922125539147786).emojis,
-                              name="bot_no"),
-            "yes":
-            discord.utils.get(self.get_guild(406922125539147786).emojis,
-                              name="bot_yes")
-        }
-
         print("")
         print(f"Logged in as: {self.user.name}")
         print("")
@@ -30,7 +21,7 @@ class Client(discord.Client):
 
 async def minesweeper(message, client):
     """Command that generates minesweepers to repel the user's boredom."""
-    embed, minesweep = await setup_minesweep(message, client)
+    embed, minesweep = await setup_minesweep(message)
     canceled, mine_error, values = await get_all_fields(
         message, client, embed, minesweep)
 
@@ -43,12 +34,12 @@ async def minesweeper(message, client):
         await message.channel.send(embed=canceled_embed())
 
 
-async def setup_minesweep(message, client):
+async def setup_minesweep(message):
     """Help function that sets up minesweper and returns embed and message used."""
     embed = discord.Embed(color=0xC27C0E)
     embed.set_author(name="💣 Minesweeper!")
     minesweep = await message.channel.send(embed=embed)
-    await minesweep.add_reaction(client.bot_emojis["no"])
+    await minesweep.add_reaction('❌')
     return embed, minesweep
 
 
@@ -84,7 +75,7 @@ async def get_all_fields(message, client, embed, minesweep):
 async def get_field(message, client, for_items, mine_error, values):
     """Help function that gets a field at each for_items["key"]."""
     reply = await wait_msg_or_react(message, client)
-    canceled = check_canceled(client, reply)
+    canceled = check_canceled(reply)
     if not canceled:
         mine_error = await delete_error(mine_error)
         reply.content = check_minesweep(reply.content,
@@ -246,8 +237,7 @@ async def wait_msg_or_react(message, client):
 
     def react_check(reaction, user):
         """Check if it is a valid react."""
-        return user == message.author and str(
-            reaction.emoji) == client.bot_emojis["no"]
+        return user == message.author and str(reaction.emoji) == '❌'
 
     try:
         done, pending = await asyncio.wait(
@@ -275,10 +265,10 @@ async def delete_error(error):
     return error
 
 
-def check_canceled(client, reply):
+def check_canceled(reply):
     """Check if a reply is saying to cancel."""
     return (isinstance(reply, tuple)
-            and reply[0].emoji == client.bot_emojis["no"]) or reply is None
+            and reply[0].emoji == '❌') or reply is None
 
 
 def canceled_embed():
